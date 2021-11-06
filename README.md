@@ -1,5 +1,6 @@
 # weathermap
 
+https://user-images.githubusercontent.com/76507486/140621522-18ff5ac4-99a3-4183-aad3-17351c8c9438.mp4
 
 <h1>Overview</h1>
 Displays an 5 day weather forecast for ANY location in the world You can drag the pin on your desired location, or search for a location in the search box.
@@ -12,6 +13,3 @@ Displays an 5 day weather forecast for ANY location in the world You can drag th
   <li>Uses AJAX calls to wait for the data, then displays if call is successful.</li>
   <li>Each day displays temperature, condition, icon for condition, wind speed and atmospheric pressure.</li>
 </ul>
-
-
-![Photo on 11-4-21 at 9 31 AM](https://user-images.githubusercontent.com/76507486/140621234-831fec9f-c11b-4ce0-9d25-7381d3e96f32.jpg)
