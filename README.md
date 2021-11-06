@@ -12,3 +12,6 @@ Displays an 5 day weather forecast for ANY location in the world You can drag th
   <li>Uses AJAX calls to wait for the data, then displays if call is successful.</li>
   <li>Each day displays temperature, condition, icon for condition, wind speed and atmospheric pressure.</li>
 </ul>
+
+
+![Photo on 11-4-21 at 9 31 AM](https://user-images.githubusercontent.com/76507486/140621234-831fec9f-c11b-4ce0-9d25-7381d3e96f32.jpg)
