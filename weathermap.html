@@ -16,7 +16,7 @@
     <div class="">
         <a class="navbar-brand text-white" href="#">5-Day Weather Forecast</a>
         <a class="text-white">
-            Current City:
+            Current Location:
             <span id="currentCity">San Antonio, TX</span>
         </a>
     </div>
@@ -26,9 +26,9 @@
 <!--SEARCHBAR-->
 <div class="input-group my-2">
     <div class="form-outline mx-2">
-        <input type="search" id="cityValue" class="form-control" placeholder="Enter a city..." />
+        <input type="search" id="search" class="form-control" placeholder="Enter a city..." />
     </div>
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" id="searchButton">
         <i class="bi bi-search" id="citySearch">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -45,23 +45,6 @@
 
 
 <script>
-    // CURRENT CONDITIONS IN SAN ANTONIO
-    //   $.get("http://api.openweathermap.org/data/2.5/weather",
-    //       {
-    //   APPID: OPEN_WEATHER_APPID,
-    //   q:     "San Antonio, US",
-    //   units: "imperial"
-    // }
-    // ).done(function(data) {
-    //       console.log(data);
-    //       $('#temperature').text('Temperature: ' + data.main.temp + ' Fahrenheit');
-    //       $('#description').text('Description: ' + data.weather[0].description);
-    //       $('#wind').text('Wind: ' + data.wind.speed + ' mph');
-    //       $('#pressure').text('Pressure: ' + data.main.pressure + ' hPa');
-    //
-    // });
-
-
     // MAPBOX
     mapboxgl.accessToken = MAPBOX_API_TOKEN;
     const map = new mapboxgl.Map({
@@ -81,7 +64,8 @@
         newLat = lngLat.lat;
         getNewForecast(newLat, newLong);
         reverseGeocode({lng: newLong, lat: newLat}, MAPBOX_API_TOKEN).then(function(reverseResult) {
-            var currentCity = (reverseResult.features[0].context[1].text) + ', ' + (reverseResult.features[0].context[3].text)
+            console.log(reverseResult);
+            var currentCity = reverseResult.features[0].place_name;
             $('#currentCity').text(currentCity);
         })
     }
@@ -89,8 +73,19 @@
     marker.on('dragend', onDragEnd);
 
 
-    $('#citySearch').click(function() {
-        var city = $('#cityValue').val();
+    // GEOCODE FROM SEARCHBAR
+
+    $('#search').keyup(function(event) {
+        if (event.keyCode === 13) {
+            $('#searchButton').click(search())
+            }
+        }
+    )
+    $('#searchButton').click(search);
+
+    function search() {
+        var city = $('#search').val();
+        console.log(city);
         geocode(city, MAPBOX_API_TOKEN).then(function(result) {
             console.log(result);
             map.setCenter(result);
@@ -98,14 +93,13 @@
             marker.setLngLat([result[0], result[1]]);
             getNewForecast(result[1], result[0]);
             reverseGeocode({lng: result[0], lat: result[1]}, MAPBOX_API_TOKEN).then(function(reverseResult) {
-                console.log(reverseResult);
-                var currentCity = (reverseResult.features[0].context[2].text) + ', ' + (reverseResult.features[0].context[4].text)
+                // console.log(reverseResult);
+                var currentCity = reverseResult.features[0].place_name
                 $('#currentCity').text(currentCity);
             })
         })
-        $('#cityValue').text('');
-        // console.log(city)
-    })
+        $('#search').val('');
+    }
 
 
 
@@ -123,7 +117,6 @@
 
             $('#fiveDays').html('');
             var daysArray = data.daily.slice(0,5);
-            console.log(daysArray)
             daysArray.forEach(function(day) {
                 $('#fiveDays').append(
                     '<div class="card my-2" style="width: 18rem;">' +
